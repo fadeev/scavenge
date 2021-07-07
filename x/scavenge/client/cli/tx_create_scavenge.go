@@ -1,8 +1,11 @@
 package cli
 
 import (
-	"github.com/spf13/cobra"
+	"crypto/sha256"
+	"encoding/hex"
 	"strconv"
+
+	"github.com/spf13/cobra"
 
 	"github.com/cosmonaut/scavenge/x/scavenge/types"
 	"github.com/cosmos/cosmos-sdk/client"
@@ -14,11 +17,12 @@ var _ = strconv.Itoa(0)
 
 func CmdCreateScavenge() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-scavenge [solutionHash] [description] [reward]",
+		Use:   "create-scavenge [solution] [description] [reward]",
 		Short: "Broadcast message create-scavenge",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			argsSolutionHash := string(args[0])
+			solutionHash := sha256.Sum256([]byte(args[0]))
+			solutionHashString := hex.EncodeToString(solutionHash[:])
 			argsDescription := string(args[1])
 			argsReward := string(args[2])
 
@@ -27,7 +31,7 @@ func CmdCreateScavenge() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgCreateScavenge(clientCtx.GetFromAddress().String(), string(argsSolutionHash), string(argsDescription), string(argsReward))
+			msg := types.NewMsgCreateScavenge(clientCtx.GetFromAddress().String(), string(solutionHashString), string(argsDescription), string(argsReward))
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}

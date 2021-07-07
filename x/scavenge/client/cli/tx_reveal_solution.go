@@ -1,8 +1,9 @@
 package cli
 
 import (
-	"github.com/spf13/cobra"
 	"strconv"
+
+	"github.com/spf13/cobra"
 
 	"github.com/cosmonaut/scavenge/x/scavenge/types"
 	"github.com/cosmos/cosmos-sdk/client"
