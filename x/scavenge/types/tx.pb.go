@@ -9,7 +9,11 @@ import (
 	grpc1 "github.com/gogo/protobuf/grpc"
 	proto "github.com/gogo/protobuf/proto"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
+	io "io"
 	math "math"
+	math_bits "math/bits"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -23,18 +27,330 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// this line is used by starport scaffolding # proto/tx/message
+type MsgRevealSolution struct {
+	Creator  string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	Solution string `protobuf:"bytes,2,opt,name=solution,proto3" json:"solution,omitempty"`
+}
+
+func (m *MsgRevealSolution) Reset()         { *m = MsgRevealSolution{} }
+func (m *MsgRevealSolution) String() string { return proto.CompactTextString(m) }
+func (*MsgRevealSolution) ProtoMessage()    {}
+func (*MsgRevealSolution) Descriptor() ([]byte, []int) {
+	return fileDescriptor_62ec6f1544538068, []int{0}
+}
+func (m *MsgRevealSolution) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRevealSolution) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRevealSolution.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRevealSolution) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRevealSolution.Merge(m, src)
+}
+func (m *MsgRevealSolution) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRevealSolution) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRevealSolution.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRevealSolution proto.InternalMessageInfo
+
+func (m *MsgRevealSolution) GetCreator() string {
+	if m != nil {
+		return m.Creator
+	}
+	return ""
+}
+
+func (m *MsgRevealSolution) GetSolution() string {
+	if m != nil {
+		return m.Solution
+	}
+	return ""
+}
+
+type MsgRevealSolutionResponse struct {
+}
+
+func (m *MsgRevealSolutionResponse) Reset()         { *m = MsgRevealSolutionResponse{} }
+func (m *MsgRevealSolutionResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgRevealSolutionResponse) ProtoMessage()    {}
+func (*MsgRevealSolutionResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_62ec6f1544538068, []int{1}
+}
+func (m *MsgRevealSolutionResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRevealSolutionResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRevealSolutionResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRevealSolutionResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRevealSolutionResponse.Merge(m, src)
+}
+func (m *MsgRevealSolutionResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRevealSolutionResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRevealSolutionResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRevealSolutionResponse proto.InternalMessageInfo
+
+type MsgCommitSolution struct {
+	Creator               string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	SolutionHash          string `protobuf:"bytes,2,opt,name=solutionHash,proto3" json:"solutionHash,omitempty"`
+	SolutionScavengerHash string `protobuf:"bytes,3,opt,name=solutionScavengerHash,proto3" json:"solutionScavengerHash,omitempty"`
+}
+
+func (m *MsgCommitSolution) Reset()         { *m = MsgCommitSolution{} }
+func (m *MsgCommitSolution) String() string { return proto.CompactTextString(m) }
+func (*MsgCommitSolution) ProtoMessage()    {}
+func (*MsgCommitSolution) Descriptor() ([]byte, []int) {
+	return fileDescriptor_62ec6f1544538068, []int{2}
+}
+func (m *MsgCommitSolution) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgCommitSolution) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgCommitSolution.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgCommitSolution) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgCommitSolution.Merge(m, src)
+}
+func (m *MsgCommitSolution) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgCommitSolution) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgCommitSolution.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgCommitSolution proto.InternalMessageInfo
+
+func (m *MsgCommitSolution) GetCreator() string {
+	if m != nil {
+		return m.Creator
+	}
+	return ""
+}
+
+func (m *MsgCommitSolution) GetSolutionHash() string {
+	if m != nil {
+		return m.SolutionHash
+	}
+	return ""
+}
+
+func (m *MsgCommitSolution) GetSolutionScavengerHash() string {
+	if m != nil {
+		return m.SolutionScavengerHash
+	}
+	return ""
+}
+
+type MsgCommitSolutionResponse struct {
+}
+
+func (m *MsgCommitSolutionResponse) Reset()         { *m = MsgCommitSolutionResponse{} }
+func (m *MsgCommitSolutionResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgCommitSolutionResponse) ProtoMessage()    {}
+func (*MsgCommitSolutionResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_62ec6f1544538068, []int{3}
+}
+func (m *MsgCommitSolutionResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgCommitSolutionResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgCommitSolutionResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgCommitSolutionResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgCommitSolutionResponse.Merge(m, src)
+}
+func (m *MsgCommitSolutionResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgCommitSolutionResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgCommitSolutionResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgCommitSolutionResponse proto.InternalMessageInfo
+
+type MsgCreateScavenge struct {
+	Creator      string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	SolutionHash string `protobuf:"bytes,2,opt,name=solutionHash,proto3" json:"solutionHash,omitempty"`
+	Description  string `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	Reward       string `protobuf:"bytes,4,opt,name=reward,proto3" json:"reward,omitempty"`
+}
+
+func (m *MsgCreateScavenge) Reset()         { *m = MsgCreateScavenge{} }
+func (m *MsgCreateScavenge) String() string { return proto.CompactTextString(m) }
+func (*MsgCreateScavenge) ProtoMessage()    {}
+func (*MsgCreateScavenge) Descriptor() ([]byte, []int) {
+	return fileDescriptor_62ec6f1544538068, []int{4}
+}
+func (m *MsgCreateScavenge) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgCreateScavenge) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgCreateScavenge.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgCreateScavenge) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgCreateScavenge.Merge(m, src)
+}
+func (m *MsgCreateScavenge) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgCreateScavenge) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgCreateScavenge.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgCreateScavenge proto.InternalMessageInfo
+
+func (m *MsgCreateScavenge) GetCreator() string {
+	if m != nil {
+		return m.Creator
+	}
+	return ""
+}
+
+func (m *MsgCreateScavenge) GetSolutionHash() string {
+	if m != nil {
+		return m.SolutionHash
+	}
+	return ""
+}
+
+func (m *MsgCreateScavenge) GetDescription() string {
+	if m != nil {
+		return m.Description
+	}
+	return ""
+}
+
+func (m *MsgCreateScavenge) GetReward() string {
+	if m != nil {
+		return m.Reward
+	}
+	return ""
+}
+
+type MsgCreateScavengeResponse struct {
+}
+
+func (m *MsgCreateScavengeResponse) Reset()         { *m = MsgCreateScavengeResponse{} }
+func (m *MsgCreateScavengeResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgCreateScavengeResponse) ProtoMessage()    {}
+func (*MsgCreateScavengeResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_62ec6f1544538068, []int{5}
+}
+func (m *MsgCreateScavengeResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgCreateScavengeResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgCreateScavengeResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgCreateScavengeResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgCreateScavengeResponse.Merge(m, src)
+}
+func (m *MsgCreateScavengeResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgCreateScavengeResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgCreateScavengeResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgCreateScavengeResponse proto.InternalMessageInfo
+
+func init() {
+	proto.RegisterType((*MsgRevealSolution)(nil), "cosmonaut.scavenge.scavenge.MsgRevealSolution")
+	proto.RegisterType((*MsgRevealSolutionResponse)(nil), "cosmonaut.scavenge.scavenge.MsgRevealSolutionResponse")
+	proto.RegisterType((*MsgCommitSolution)(nil), "cosmonaut.scavenge.scavenge.MsgCommitSolution")
+	proto.RegisterType((*MsgCommitSolutionResponse)(nil), "cosmonaut.scavenge.scavenge.MsgCommitSolutionResponse")
+	proto.RegisterType((*MsgCreateScavenge)(nil), "cosmonaut.scavenge.scavenge.MsgCreateScavenge")
+	proto.RegisterType((*MsgCreateScavengeResponse)(nil), "cosmonaut.scavenge.scavenge.MsgCreateScavengeResponse")
+}
+
 func init() { proto.RegisterFile("scavenge/tx.proto", fileDescriptor_62ec6f1544538068) }
 
 var fileDescriptor_62ec6f1544538068 = []byte{
-	// 124 bytes of a gzipped FileDescriptorProto
+	// 345 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x2c, 0x4e, 0x4e, 0x2c,
 	0x4b, 0xcd, 0x4b, 0x4f, 0xd5, 0x2f, 0xa9, 0xd0, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x92, 0x4e,
-	0xce, 0x2f, 0xce, 0xcd, 0xcf, 0x4b, 0x2c, 0x2d, 0xd1, 0x83, 0x49, 0xc2, 0x19, 0x46, 0xac, 0x5c,
-	0xcc, 0xbe, 0xc5, 0xe9, 0x4e, 0x1e, 0x27, 0x1e, 0xc9, 0x31, 0x5e, 0x78, 0x24, 0xc7, 0xf8, 0xe0,
-	0x91, 0x1c, 0xe3, 0x84, 0xc7, 0x72, 0x0c, 0x17, 0x1e, 0xcb, 0x31, 0xdc, 0x78, 0x2c, 0xc7, 0x10,
-	0xa5, 0x97, 0x9e, 0x59, 0x92, 0x51, 0x9a, 0xa4, 0x97, 0x9c, 0x9f, 0xab, 0x0f, 0x37, 0x48, 0x1f,
-	0x6e, 0x4b, 0x05, 0x82, 0x59, 0x52, 0x59, 0x90, 0x5a, 0x9c, 0xc4, 0x06, 0xb6, 0xd4, 0x18, 0x10,
-	0x00, 0x00, 0xff, 0xff, 0x6e, 0x9e, 0x03, 0x39, 0x89, 0x00, 0x00, 0x00,
+	0xce, 0x2f, 0xce, 0xcd, 0xcf, 0x4b, 0x2c, 0x2d, 0xd1, 0x83, 0x49, 0xc2, 0x19, 0x4a, 0x9e, 0x5c,
+	0x82, 0xbe, 0xc5, 0xe9, 0x41, 0xa9, 0x65, 0xa9, 0x89, 0x39, 0xc1, 0xf9, 0x39, 0xa5, 0x25, 0x99,
+	0xf9, 0x79, 0x42, 0x12, 0x5c, 0xec, 0xc9, 0x45, 0xa9, 0x89, 0x25, 0xf9, 0x45, 0x12, 0x8c, 0x0a,
+	0x8c, 0x1a, 0x9c, 0x41, 0x30, 0xae, 0x90, 0x14, 0x17, 0x47, 0x31, 0x54, 0x95, 0x04, 0x13, 0x58,
+	0x0a, 0xce, 0x57, 0x92, 0xe6, 0x92, 0xc4, 0x30, 0x2a, 0x28, 0xb5, 0xb8, 0x20, 0x3f, 0xaf, 0x38,
+	0x55, 0xa9, 0x9d, 0x11, 0x6c, 0x91, 0x73, 0x7e, 0x6e, 0x6e, 0x66, 0x09, 0x11, 0x16, 0x29, 0x71,
+	0xf1, 0xc0, 0x0c, 0xf6, 0x48, 0x2c, 0xce, 0x80, 0x5a, 0x86, 0x22, 0x26, 0x64, 0xc2, 0x25, 0x0a,
+	0xe3, 0x07, 0x43, 0xfd, 0x53, 0x04, 0x56, 0xcc, 0x0c, 0x56, 0x8c, 0x5d, 0x12, 0xea, 0x4c, 0x54,
+	0x87, 0xc0, 0x9d, 0xd9, 0x0d, 0x75, 0x26, 0xc8, 0x15, 0xa9, 0x30, 0x7d, 0x14, 0x3a, 0x53, 0x81,
+	0x8b, 0x3b, 0x25, 0xb5, 0x38, 0xb9, 0x28, 0xb3, 0x00, 0x1c, 0x6c, 0x10, 0xc7, 0x21, 0x0b, 0x09,
+	0x89, 0x71, 0xb1, 0x15, 0xa5, 0x96, 0x27, 0x16, 0xa5, 0x48, 0xb0, 0x80, 0x25, 0xa1, 0x3c, 0x98,
+	0x53, 0x51, 0x1c, 0x03, 0x73, 0xaa, 0xd1, 0x67, 0x26, 0x2e, 0x66, 0xdf, 0xe2, 0x74, 0xa1, 0x0a,
+	0x2e, 0x3e, 0xb4, 0xe8, 0xd3, 0xd3, 0xc3, 0x13, 0xe3, 0x7a, 0x18, 0x71, 0x24, 0x65, 0x46, 0x9a,
+	0x7a, 0x98, 0x0b, 0x40, 0x36, 0xa3, 0xc5, 0x27, 0x41, 0x9b, 0x51, 0xd5, 0x13, 0xb6, 0x19, 0x7b,
+	0x34, 0x81, 0x6d, 0x46, 0x8d, 0x22, 0xc2, 0x36, 0xa3, 0xa8, 0x27, 0xc2, 0x66, 0xac, 0xa1, 0xee,
+	0xe4, 0x71, 0xe2, 0x91, 0x1c, 0xe3, 0x85, 0x47, 0x72, 0x8c, 0x0f, 0x1e, 0xc9, 0x31, 0x4e, 0x78,
+	0x2c, 0xc7, 0x70, 0xe1, 0xb1, 0x1c, 0xc3, 0x8d, 0xc7, 0x72, 0x0c, 0x51, 0x7a, 0xe9, 0x99, 0x25,
+	0x19, 0xa5, 0x49, 0x7a, 0xc9, 0xf9, 0xb9, 0xfa, 0x70, 0xb3, 0xf5, 0xe1, 0xd9, 0xb1, 0x02, 0xc1,
+	0x2c, 0xa9, 0x2c, 0x48, 0x2d, 0x4e, 0x62, 0x03, 0xe7, 0x4e, 0x63, 0x40, 0x00, 0x00, 0x00, 0xff,
+	0xff, 0x64, 0xad, 0x44, 0x1b, 0xb2, 0x03, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -49,6 +365,10 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
+	// this line is used by starport scaffolding # proto/tx/rpc
+	RevealSolution(ctx context.Context, in *MsgRevealSolution, opts ...grpc.CallOption) (*MsgRevealSolutionResponse, error)
+	CommitSolution(ctx context.Context, in *MsgCommitSolution, opts ...grpc.CallOption) (*MsgCommitSolutionResponse, error)
+	CreateScavenge(ctx context.Context, in *MsgCreateScavenge, opts ...grpc.CallOption) (*MsgCreateScavengeResponse, error)
 }
 
 type msgClient struct {
@@ -59,22 +379,1111 @@ func NewMsgClient(cc grpc1.ClientConn) MsgClient {
 	return &msgClient{cc}
 }
 
+func (c *msgClient) RevealSolution(ctx context.Context, in *MsgRevealSolution, opts ...grpc.CallOption) (*MsgRevealSolutionResponse, error) {
+	out := new(MsgRevealSolutionResponse)
+	err := c.cc.Invoke(ctx, "/cosmonaut.scavenge.scavenge.Msg/RevealSolution", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) CommitSolution(ctx context.Context, in *MsgCommitSolution, opts ...grpc.CallOption) (*MsgCommitSolutionResponse, error) {
+	out := new(MsgCommitSolutionResponse)
+	err := c.cc.Invoke(ctx, "/cosmonaut.scavenge.scavenge.Msg/CommitSolution", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) CreateScavenge(ctx context.Context, in *MsgCreateScavenge, opts ...grpc.CallOption) (*MsgCreateScavengeResponse, error) {
+	out := new(MsgCreateScavengeResponse)
+	err := c.cc.Invoke(ctx, "/cosmonaut.scavenge.scavenge.Msg/CreateScavenge", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
+	// this line is used by starport scaffolding # proto/tx/rpc
+	RevealSolution(context.Context, *MsgRevealSolution) (*MsgRevealSolutionResponse, error)
+	CommitSolution(context.Context, *MsgCommitSolution) (*MsgCommitSolutionResponse, error)
+	CreateScavenge(context.Context, *MsgCreateScavenge) (*MsgCreateScavengeResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
 type UnimplementedMsgServer struct {
 }
 
+func (*UnimplementedMsgServer) RevealSolution(ctx context.Context, req *MsgRevealSolution) (*MsgRevealSolutionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RevealSolution not implemented")
+}
+func (*UnimplementedMsgServer) CommitSolution(ctx context.Context, req *MsgCommitSolution) (*MsgCommitSolutionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CommitSolution not implemented")
+}
+func (*UnimplementedMsgServer) CreateScavenge(ctx context.Context, req *MsgCreateScavenge) (*MsgCreateScavengeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateScavenge not implemented")
+}
+
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
 	s.RegisterService(&_Msg_serviceDesc, srv)
+}
+
+func _Msg_RevealSolution_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgRevealSolution)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).RevealSolution(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/cosmonaut.scavenge.scavenge.Msg/RevealSolution",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).RevealSolution(ctx, req.(*MsgRevealSolution))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_CommitSolution_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgCommitSolution)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).CommitSolution(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/cosmonaut.scavenge.scavenge.Msg/CommitSolution",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).CommitSolution(ctx, req.(*MsgCommitSolution))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_CreateScavenge_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgCreateScavenge)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).CreateScavenge(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/cosmonaut.scavenge.scavenge.Msg/CreateScavenge",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).CreateScavenge(ctx, req.(*MsgCreateScavenge))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 var _Msg_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "cosmonaut.scavenge.scavenge.Msg",
 	HandlerType: (*MsgServer)(nil),
-	Methods:     []grpc.MethodDesc{},
-	Streams:     []grpc.StreamDesc{},
-	Metadata:    "scavenge/tx.proto",
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "RevealSolution",
+			Handler:    _Msg_RevealSolution_Handler,
+		},
+		{
+			MethodName: "CommitSolution",
+			Handler:    _Msg_CommitSolution_Handler,
+		},
+		{
+			MethodName: "CreateScavenge",
+			Handler:    _Msg_CreateScavenge_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "scavenge/tx.proto",
 }
+
+func (m *MsgRevealSolution) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgRevealSolution) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgRevealSolution) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Solution) > 0 {
+		i -= len(m.Solution)
+		copy(dAtA[i:], m.Solution)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Solution)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Creator) > 0 {
+		i -= len(m.Creator)
+		copy(dAtA[i:], m.Creator)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Creator)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgRevealSolutionResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgRevealSolutionResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgRevealSolutionResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgCommitSolution) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgCommitSolution) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgCommitSolution) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.SolutionScavengerHash) > 0 {
+		i -= len(m.SolutionScavengerHash)
+		copy(dAtA[i:], m.SolutionScavengerHash)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.SolutionScavengerHash)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.SolutionHash) > 0 {
+		i -= len(m.SolutionHash)
+		copy(dAtA[i:], m.SolutionHash)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.SolutionHash)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Creator) > 0 {
+		i -= len(m.Creator)
+		copy(dAtA[i:], m.Creator)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Creator)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgCommitSolutionResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgCommitSolutionResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgCommitSolutionResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgCreateScavenge) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgCreateScavenge) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgCreateScavenge) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Reward) > 0 {
+		i -= len(m.Reward)
+		copy(dAtA[i:], m.Reward)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Reward)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.Description) > 0 {
+		i -= len(m.Description)
+		copy(dAtA[i:], m.Description)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Description)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.SolutionHash) > 0 {
+		i -= len(m.SolutionHash)
+		copy(dAtA[i:], m.SolutionHash)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.SolutionHash)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Creator) > 0 {
+		i -= len(m.Creator)
+		copy(dAtA[i:], m.Creator)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Creator)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgCreateScavengeResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgCreateScavengeResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgCreateScavengeResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
+	offset -= sovTx(v)
+	base := offset
+	for v >= 1<<7 {
+		dAtA[offset] = uint8(v&0x7f | 0x80)
+		v >>= 7
+		offset++
+	}
+	dAtA[offset] = uint8(v)
+	return base
+}
+func (m *MsgRevealSolution) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Creator)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Solution)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgRevealSolutionResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgCommitSolution) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Creator)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.SolutionHash)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.SolutionScavengerHash)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgCommitSolutionResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgCreateScavenge) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Creator)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.SolutionHash)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Description)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Reward)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgCreateScavengeResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func sovTx(x uint64) (n int) {
+	return (math_bits.Len64(x|1) + 6) / 7
+}
+func sozTx(x uint64) (n int) {
+	return sovTx(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (m *MsgRevealSolution) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgRevealSolution: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgRevealSolution: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Creator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Solution", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Solution = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgRevealSolutionResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgRevealSolutionResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgRevealSolutionResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgCommitSolution) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgCommitSolution: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgCommitSolution: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Creator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SolutionHash", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.SolutionHash = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SolutionScavengerHash", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.SolutionScavengerHash = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgCommitSolutionResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgCommitSolutionResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgCommitSolutionResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgCreateScavenge) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgCreateScavenge: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgCreateScavenge: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Creator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SolutionHash", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.SolutionHash = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Description", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Description = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Reward", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Reward = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgCreateScavengeResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgCreateScavengeResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgCreateScavengeResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func skipTx(dAtA []byte) (n int, err error) {
+	l := len(dAtA)
+	iNdEx := 0
+	depth := 0
+	for iNdEx < l {
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return 0, ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return 0, io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		wireType := int(wire & 0x7)
+		switch wireType {
+		case 0:
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return 0, ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return 0, io.ErrUnexpectedEOF
+				}
+				iNdEx++
+				if dAtA[iNdEx-1] < 0x80 {
+					break
+				}
+			}
+		case 1:
+			iNdEx += 8
+		case 2:
+			var length int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return 0, ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return 0, io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				length |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if length < 0 {
+				return 0, ErrInvalidLengthTx
+			}
+			iNdEx += length
+		case 3:
+			depth++
+		case 4:
+			if depth == 0 {
+				return 0, ErrUnexpectedEndOfGroupTx
+			}
+			depth--
+		case 5:
+			iNdEx += 4
+		default:
+			return 0, fmt.Errorf("proto: illegal wireType %d", wireType)
+		}
+		if iNdEx < 0 {
+			return 0, ErrInvalidLengthTx
+		}
+		if depth == 0 {
+			return iNdEx, nil
+		}
+	}
+	return 0, io.ErrUnexpectedEOF
+}
+
+var (
+	ErrInvalidLengthTx        = fmt.Errorf("proto: negative length found during unmarshaling")
+	ErrIntOverflowTx          = fmt.Errorf("proto: integer overflow")
+	ErrUnexpectedEndOfGroupTx = fmt.Errorf("proto: unexpected end of group")
+)

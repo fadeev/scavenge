@@ -24,3 +24,11 @@ const (
 func KeyPrefix(p string) []byte {
 	return []byte(p)
 }
+
+const (
+	ScavengeKey = "Scavenge-value-"
+)
+
+const (
+	CommitKey = "Commit-value-"
+)
